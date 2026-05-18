@@ -29,16 +29,23 @@ function App() {
       });
   }
 
-  // DELETE toy from backend, then remove it from state by id
   function deleteToy(id) {
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
       .then(() => {
-        // Keep every toy except the one that was deleted
         setToys((toys) => toys.filter((toy) => toy.id !== id));
       });
+  }
+
+  // PATCH the toy's likes on the backend, then update it in state
+  function updateToy(updatedToy) {
+    // Map over toys — replace the matching toy, keep all others as-is
+    // This preserves the order of toys in the list
+    setToys((toys) =>
+      toys.map((toy) => (toy.id === updatedToy.id ? updatedToy : toy)),
+    );
   }
 
   return (
@@ -48,8 +55,8 @@ function App() {
       <div className='buttonContainer'>
         <button onClick={handleClick}>Add a Toy</button>
       </div>
-      {/* Pass deleteToy down to ToyContainer */}
-      <ToyContainer toys={toys} deleteToy={deleteToy} />
+      {/* Pass updateToy down to ToyContainer */}
+      <ToyContainer toys={toys} deleteToy={deleteToy} updateToy={updateToy} />
     </>
   );
 }
