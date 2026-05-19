@@ -2,6 +2,7 @@ import React from "react";
 import ToyCard from "./ToyCard";
 
 // Receives toys, deleteToy, and updateToy from App
+// Passes them down to each individual ToyCard
 function ToyContainer({ toys, deleteToy, updateToy }) {
   return (
     <div id='toy-collection'>
