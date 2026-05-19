@@ -1,9 +1,14 @@
 import React from "react";
 import ToyCard from "./ToyCard";
 
-function ToyContainer() {
+// Receives the toys array from App and renders a ToyCard for each
+function ToyContainer({ toys }) {
   return (
-    <div id="toy-collection">{/* Render the collection of ToyCards */}</div>
+    <div id='toy-collection'>
+      {toys.map((toy) => (
+        <ToyCard key={toy.id} toy={toy} />
+      ))}
+    </div>
   );
 }
 
