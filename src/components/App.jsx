@@ -17,7 +17,6 @@ function App() {
     setShowForm((showForm) => !showForm);
   }
 
-  // POST a new toy to the backend, then add it to state
   function addToy(newToy) {
     fetch("http://localhost:3001/toys", {
       method: "POST",
@@ -26,20 +25,38 @@ function App() {
     })
       .then((res) => res.json())
       .then((createdToy) => {
-        // Spread existing toys and append the newly created one
         setToys((toys) => [...toys, createdToy]);
       });
+  }
+
+  function deleteToy(id) {
+    fetch(`http://localhost:3001/toys/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setToys((toys) => toys.filter((toy) => toy.id !== id));
+      });
+  }
+
+  // PATCH the toy's likes on the backend, then update it in state
+  function updateToy(updatedToy) {
+    // Map over toys — replace the matching toy, keep all others as-is
+    // This preserves the order of toys in the list
+    setToys((toys) =>
+      toys.map((toy) => (toy.id === updatedToy.id ? updatedToy : toy)),
+    );
   }
 
   return (
     <>
       <Header />
-      {/* Pass addToy down so ToyForm can call it on submit */}
       {showForm ? <ToyForm addToy={addToy} /> : null}
       <div className='buttonContainer'>
         <button onClick={handleClick}>Add a Toy</button>
       </div>
-      <ToyContainer toys={toys} />
+      {/* Pass updateToy down to ToyContainer */}
+      <ToyContainer toys={toys} deleteToy={deleteToy} updateToy={updateToy} />
     </>
   );
 }
